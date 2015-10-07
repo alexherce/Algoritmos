@@ -16,7 +16,7 @@ camionero.
 
 using namespace std;
 
-int truckStops(int distanciaViaje, int tamTanque, const int nGasolineras, int * arrayGasolineras);
+int truckStops(int distanciaViaje, int tamTanque, const int nGasolineras, int * arrayGasolineras, bool * arrayParadas);
 
 int main()
 {
@@ -25,15 +25,29 @@ int main()
     int tamTanque = 300;
     const int nGasolineras = 10;
     int arrayGasolineras[nGasolineras] = {100, 200, 300, 400, 500, 600, 700, 800, 900, 1000};
+    bool arrayParadas[nGasolineras] = {false};
+    int resultado = truckStops(distanciaViaje, tamTanque, nGasolineras, arrayGasolineras, arrayParadas);
 
-    cout << "Numero de paradas: " << truckStops(distanciaViaje, tamTanque, nGasolineras, arrayGasolineras) << endl;
-    cout << "Si el resultado es -1, el camion no pudo completar el viaje ya que no hay gasolineras suficientes." << endl;
+    cout << "Numero de paradas: " << resultado << endl;
+
+    if (resultado > -1)
+    {
+        for(int i = 0; i < nGasolineras; i++)
+        {
+            if (arrayParadas[i] == true)
+            {
+                cout << "Parada en la gasolinera del KM " << arrayGasolineras[i] << endl;
+            }
+        }
+    } else {
+        cout << "Si el resultado es -1, el camion no pudo completar el viaje ya que no hay gasolineras suficientes." << endl;
+    }
 
     return 0;
 }
 
 
-int truckStops(int distanciaViaje, int tamTanque, const int nGasolineras, int * arrayGasolineras)
+int truckStops(int distanciaViaje, int tamTanque, const int nGasolineras, int * arrayGasolineras, bool * arrayParadas)
 {
     int i = 0;
     int kmRecorridos = 0;
@@ -49,6 +63,7 @@ int truckStops(int distanciaViaje, int tamTanque, const int nGasolineras, int * 
         if(kmRecorridos > tamTanque)
         {
             ultimaParada = arrayGasolineras[i-1];
+            arrayParadas[i-1] = true;
             paradas++;
             kmRecorridos = 0;
         }
