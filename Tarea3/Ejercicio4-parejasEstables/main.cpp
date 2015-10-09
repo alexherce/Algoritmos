@@ -19,42 +19,40 @@ sobre la mujer m y además la mujer m’ también prefiere a h sobre h’.
 sobre el hombre h y además el hombre h” también prefiere a m sobre la mujer m”.
 
 */
-const int nPersonas = 5;
+const int nPersonas = 4;
+bool exito;
+
 int preferenciasMujeres[nPersonas][nPersonas] = {
-        {4,3,2,1,0},
-        {3,2,1,0,4},
-        {2,1,0,4,3},
-        {1,0,4,3,2},
-        {0,4,3,2,1}
+        {3,1,2,0},
+        {3,2,0,1},
+        {1,3,0,2},
+        {2,1,3,0}
         };
 int preferenciasHombres[nPersonas][nPersonas] = {
-        {0,4,3,2,1},
-        {1,0,4,3,2},
-        {2,1,0,4,3},
-        {3,2,1,0,4},
-        {4,3,2,1,0}
+        {1,3,2,0},
+        {0,2,3,1},
+        {1,3,2,0},
+        {2,1,3,0}
         };
 
 int ordenMujeres[nPersonas][nPersonas] = {
-        {4,3,2,1,0},
-        {3,2,1,0,4},
-        {2,1,0,4,3},
-        {1,0,4,3,2},
-        {0,4,3,2,1}
+        {3,0,2,1},
+        {0,3,1,2},
+        {3,0,2,1},
+        {3,1,0,2}
         };
 int ordenHombres[nPersonas][nPersonas] = {
-        {0,4,3,2,1},
-        {1,0,4,3,2},
-        {2,1,0,4,3},
-        {3,2,1,0,4},
-        {4,3,2,1,0}
+        {3,1,2,0},
+        {2,3,1,0},
+        {2,0,3,1},
+        {3,1,0,2}
         };
 
 
 int x[nPersonas];
 int y[nPersonas];
 
-bool libre[nPersonas] = {true};
+bool disponible[nPersonas] = {true};
 
 bool estable (int h, int m, int p);
 void parejas (int hombre, bool exito, int n);
@@ -64,8 +62,10 @@ using namespace std;
 int main()
 {
 
-    bool exito = false;
-    parejas(1, exito, nPersonas);
+    for(int i = 0; i < nPersonas; i++)
+        disponible[i] = true;
+
+    parejas(0, exito, nPersonas);
 
     cout << "Complejidad O(log n)" << endl << endl;
 
@@ -82,16 +82,16 @@ int main()
 
 bool estable (int h, int m, int p)
 {
-    int mejormujer, mejorhombre, i, limite;
+    int mejorMujer, mejorHombre, i, limite;
     bool s = true;
     i = 0;
 
     while (i < p && s)
     {
-        mejormujer = preferenciasMujeres[h][i];
-        if (libre[mejormujer] == false)
+        mejorMujer = preferenciasMujeres[h][i];
+        if (disponible[mejorMujer] == false)
         {
-            if (ordenMujeres[mejormujer][h] > ordenMujeres[mejormujer][y[mejormujer]])
+            if (ordenMujeres[mejorMujer][h] > ordenMujeres[mejorMujer][y[mejorMujer]])
             {
                 s = true;
             } else {
@@ -103,12 +103,12 @@ bool estable (int h, int m, int p)
 
     i =0;
     limite = preferenciasHombres[m][h];
-    while ((i<limite) && s)
+    while ((i < limite) && s)
     {
-        mejorhombre = preferenciasHombres[m][i];
-        if (mejorhombre < h)
+        mejorHombre = preferenciasHombres[m][i];
+        if (mejorHombre < h)
         {
-            if (ordenHombres[mejorhombre][m] > ordenHombres[mejorhombre][x[mejorhombre]])
+            if (ordenHombres[mejorHombre][m] > ordenHombres[mejorHombre][x[mejorHombre]])
             {
                 s= true;
             } else {
@@ -122,21 +122,21 @@ bool estable (int h, int m, int p)
 
 void parejas (int hombre, bool exito, int n)
 {
-    int mujer, prefiere, preferencias;
+    int mujer, prefiere;
     prefiere = 0;
     while (prefiere < n && exito != true)
     {
         mujer = preferenciasMujeres[hombre][prefiere];
-        if (libre[mujer] && estable(hombre,mujer,prefiere))
+        if (disponible[mujer] == true && estable(hombre,mujer,prefiere) == true)
         {
             x[hombre] = mujer;
             y[mujer] = hombre;
-            libre[mujer] = false;
+            disponible[mujer] = false;
             if (hombre < n)
             {
-                parejas(hombre+1,exito, n);
+                parejas(hombre + 1, exito, n);
                 if (!exito)
-                    libre[mujer] = true;
+                    disponible[mujer] = true;
             } else {
                 exito = true;
             }
