@@ -28,6 +28,7 @@ int main()
     bool arrayParadas[nGasolineras] = {false};
     int resultado = truckStops(distanciaViaje, tamTanque, nGasolineras, arrayGasolineras, arrayParadas);
 
+    cout << "Complejidad O(log n) si tiene suficiente gasolina para llegar a la primera parada." << endl << endl;
     cout << "Numero de paradas: " << resultado << endl;
 
     if (resultado > -1)
